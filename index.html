@@ -150,13 +150,9 @@
 
   <button id="googleLogout" hidden>Sign out</button>
 </section>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 
-<script type="module">
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-  import { initializeApp } from
-    "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
-
-  import {
+ <script type="module"> 
     getAuth,
     GoogleAuthProvider,
     signInWithPopup,
