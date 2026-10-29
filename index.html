@@ -200,18 +200,12 @@
   });
   
   function buyCourse(courseName, price) {
-  const confirmPayment = confirm(
-    "Buy " + courseName + " for ₹" + price + "?"
+  window.open("gpay-qr.jpeg", "_blank");
+
+  alert(
+    "Scan the QR code using Google Pay.\n" +
+    "Your payment must be verified before course access."
   );
-
-  if (confirmPayment) {
-    window.open("gpay-qr.jpeg", "_blank");
-
-    alert(
-      "Scan the QR code using Google Pay. " +
-      "Your payment must be verified before course access."
-    );
-  }
 }
 </script>
 </body>
