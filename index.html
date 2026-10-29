@@ -152,6 +152,7 @@
 </section>
 
 <script type="module">
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   import { initializeApp } from
     "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
 
@@ -173,8 +174,9 @@
 };
 
   const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const provider = new GoogleAuthProvider();
+const auth = getAuth(app);
+emailjs.init({ publicKey: "-zT0as-ajxiaDIwNl" });
+const provider = new GoogleAuthProvider();
 
   const loginButton = document.getElementById("googleLogin");
   const logoutButton = document.getElementById("googleLogout");
@@ -201,8 +203,34 @@
   
 
 
-window.buyCourse = function(courseName, price) {
-  window.location.href = "https://drayoush2010-sudo.github.io/Course-selling-website/gpay-qr.jpeg";
+
+window.buyCourse = async function(courseName, price) {
+  const transactionId = prompt("Enter your UPI transaction/reference ID:");
+  if (!transactionId || !transactionId.trim()) {
+    alert("Please enter your transaction/reference ID.");
+    return;
+  }
+
+  const customerEmail = auth.currentUser?.email;
+  if (!customerEmail) {
+    alert("Please sign in with Google first.");
+    return;
+  }
+
+  try {
+    await emailjs.send("service_8iz9yml", "template_6acwbma", {
+      customer_name: auth.currentUser.displayName || "Course customer",
+      customer_email: customerEmail,
+      course_name: courseName,
+      amount: price,
+      transaction_id: transactionId.trim()
+    });
+
+    alert("Payment request sent! Your payment will be checked manually.");
+  } catch (error) {
+    console.error("EmailJS error:", error);
+    alert("Email could not be sent. Please try again.");
+  }
 };
 
   
