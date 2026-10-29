@@ -139,5 +139,68 @@
   <p>© 2026 CoursePro. All rights reserved.</p>
 </footer>
 
+<section id="account" style="text-align:center;padding:25px;">
+  <h2>CoursePro Account</h2>
+  <p id="loginStatus">Sign in to get started.</p>
+
+  <button id="googleLogin"
+    style="padding:12px 22px;background:#4285f4;color:white;border:0;border-radius:8px;">
+    Continue with Google
+  </button>
+
+  <button id="googleLogout" hidden>Sign out</button>
+</section>
+
+<script type="module">
+  import { initializeApp } from
+    "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
+
+  import {
+    getAuth,
+    GoogleAuthProvider,
+    signInWithPopup,
+    onAuthStateChanged,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-auth.js";
+
+  const firebaseConfig = {
+  apiKey: "AIzaSyAHDbbKGhcSjq9TA8tXFLWWmpl33qF80AM",
+  authDomain: "coursepro-d0c54.firebaseapp.com",
+  projectId: "coursepro-d0c54",
+  storageBucket: "coursepro-d0c54.firebasestorage.app",
+  messagingSenderId: "173095220652",
+  appId: "1:173095220652:web:df213630b52ba27ebff609"
+};
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  const loginButton = document.getElementById("googleLogin");
+  const logoutButton = document.getElementById("googleLogout");
+  const status = document.getElementById("loginStatus");
+
+  loginButton.onclick = async () => {
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      status.textContent = "Login error: " + error.message;
+    }
+  };
+
+  logoutButton.onclick = () => signOut(auth);
+
+  onAuthStateChanged(auth, user => {
+    status.textContent = user
+      ? "Signed in as " + user.email
+      : "Sign in to get started.";
+
+    loginButton.hidden = !!user;
+    logoutButton.hidden = !user;
+  });
+</script>
+</body>
+</html>
+
 </body>
 </html>
