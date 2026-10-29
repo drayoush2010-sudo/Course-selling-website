@@ -198,9 +198,23 @@
     loginButton.hidden = !!user;
     logoutButton.hidden = !user;
   });
+  
+  function buyCourse(courseName, price) {
+  const confirmPayment = confirm(
+    "Buy " + courseName + " for ₹" + price + "?"
+  );
+
+  if (confirmPayment) {
+    window.open("gpay-qr.jpeg", "_blank");
+
+    alert(
+      "Scan the QR code using Google Pay. " +
+      "Your payment must be verified before course access."
+    );
+  }
+}
 </script>
 </body>
 </html>
 
-</body>
-</html>
+
