@@ -199,14 +199,9 @@
     logoutButton.hidden = !user;
   });
   
-  function buyCourse(courseName, price) {
-  window.open("gpay-qr.jpeg", "_blank");
-
-  alert(
-    "Scan the QR code using Google Pay.\n" +
-    "Your payment must be verified before course access."
-  );
-}
+function buyCourse(courseName, price) {
+  window.location.href = "gpay-qr.jpeg";
+}  
 </script>
 </body>
 </html>
