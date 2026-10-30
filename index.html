@@ -197,38 +197,67 @@ alert("Google button script loaded");
 
     loginButton.hidden = !!user;
     logoutButton.hidden = !user;
-  });
-  
-
-
 
 window.buyCourse = async function(courseName, price) {
-  const transactionId = prompt("Enter your UPI transaction/reference ID:");
-  if (!transactionId || !transactionId.trim()) {
-    alert("Please enter your transaction/reference ID.");
-    return;
-  }
-
   const customerEmail = auth.currentUser?.email;
+
   if (!customerEmail) {
     alert("Please sign in with Google first.");
     return;
   }
 
-  try {
-    await emailjs.send("service_8iz9yml", "template_6acwbma", {
-      customer_name: auth.currentUser.displayName || "Course customer",
-      customer_email: customerEmail,
-      course_name: courseName,
-      amount: price,
-      transaction_id: transactionId.trim()
-    });
+  const paymentWindow = window.open("", "_blank", "width=450,height=650");
 
-    alert("Payment request sent! Your payment will be checked manually.");
-  } catch (error) {
-    console.error("EmailJS error:", error);
-    alert("Email could not be sent. Please try again.");
+  if (!paymentWindow) {
+    alert("Please allow pop-ups to continue with payment.");
+    return;
   }
+
+  paymentWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>CoursePro Payment</title>
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <style>
+        body { font-family: Arial; text-align: center; padding: 20px; }
+        img { width: 230px; max-width: 90%; }
+        input { padding: 12px; width: 90%; margin: 12px 0; }
+        button { padding: 12px 22px; background: #4285f4;
+          color: white; border: 0; border-radius: 8px; }
+      </style>
+    </head>
+    <body>
+      <h2>CoursePro Payment</h2>
+      <p>Course: ${courseName}</p>
+      <h3>Amount: ₹${price}</h3>
+      <p>Scan this QR code using your UPI app.</p>
+      <img src="gpay-qr.jpeg" alt="Google Pay QR Code">
+      <p>After completing payment, enter your UPI transaction ID:</p>
+      <input id="transactionId" placeholder="Enter UPI transaction ID">
+      <br>
+      <button id="submitPayment">Submit Payment Request</button>
+      <script>
+        document.getElementById("submitPayment").onclick = function() {
+          const id = document.getElementById("transactionId").value.trim();
+          if (!id) {
+            alert("Please enter your transaction ID.");
+            return;
+          }
+          window.opener.postMessage({
+            type: "COURSEPRO_PAYMENT",
+            courseName: ${JSON.stringify(courseName)},
+            price: ${JSON.stringify(price)},
+            transactionId: id
+          }, window.location.origin);
+          document.body.innerHTML = "<h2>Payment request submitted</h2><p>Your payment will be verified manually.</p>";
+        };
+   <\/script>   
+    </body>
+    </html>
+  `);
+
+  paymentWindow.document.close();
 };
 
   
