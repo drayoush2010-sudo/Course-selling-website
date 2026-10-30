@@ -179,7 +179,9 @@ const provider = new GoogleAuthProvider();
   const loginButton = document.getElementById("googleLogin");
   const logoutButton = document.getElementById("googleLogout");
   const status = document.getElementById("loginStatus");
-alert("Google button script loaded");
+window.onload = function() {
+  alert("JavaScript is working!");
+};
   loginButton.onclick = async () => {
     try {
       await signInWithPopup(auth, provider);
